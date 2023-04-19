@@ -1,0 +1,52 @@
+/* Next Permutation,A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
+
+For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).
+
+For example, the next permutation of arr = [1,2,3] is [1,3,2].
+Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
+While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
+Given an array of integers nums, find the next permutation of nums.
+The replacement must be in place and use only constant extra memory.*/
+void swap(int* nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+
+void reverse(int* nums, int start, int end) {
+    while (start < end) {
+        swap(nums, start, end);
+        start++;
+        end--;
+    }
+}
+
+void nextPermutation(int* nums, int numsSize) {
+    //  Find the first pair of adjacent elements (i, i+1) from right to left,
+    // such that nums[i] < nums[i+1]
+    int i = numsSize - 2;
+    while (i >= 0 && nums[i] >= nums[i+1]) {
+        i--;
+    }
+
+    // If no such pair is found,it is already sorted in descending order,
+    // it's the last permutation, so we just reverse the array to get
+    // the next permutation which is the first permutation (sorted in ascending order)
+    if (i < 0) {
+        reverse(nums, 0, numsSize - 1);
+        return;
+    }
+
+    // Find the first element from right to left that is greater than nums[i]
+    int j = numsSize - 1;
+    while (j > i && nums[j] <= nums[i]) {
+        j--;
+    }
+
+    // Swap nums[i] and nums[j]
+    swap(nums, i, j);
+
+    //  Reverse the subarray nums[i+1:] to get the lexicographically next permutation
+    reverse(nums, i+1, numsSize - 1);
+}
